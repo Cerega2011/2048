@@ -4,10 +4,25 @@ let gridContainer = document.querySelector(".grid__container")
 let scoreText = document.querySelector(".score__text")
 let gameContainerWin = document.querySelector(".game__container-win")
 let gridCell
+let touchStart = {
+    x: null,
+    y: null
+}
 
-
+let returnButton =document.querySelector('.return_button')
+let moveHistory = []
 let cells = []
 let score = 0
+
+function undoMove() {
+    if(moveHistory.length > 0){
+        let previousState = moveHistory.pop()
+        cells.forEach((cell, index) => {
+            cell.value = previousState[index]
+        })
+        updateBoard()
+    }
+}
 
 function handleKeyUp(event) {
     if (event.key === 'ArrowRight' || event.code === 'KeyD' ) {
@@ -23,7 +38,7 @@ function handleKeyUp(event) {
 
 function checkForWin() {
     for(let i = 0; i < cells.length; i++){
-        if(cells[i].value == 16){
+        if(cells[i].value == 2048){
             gameContainerWin.classList.add('game__container-win__active')
             document.removeEventListener('keyup', handleKeyUp)
 
@@ -90,6 +105,8 @@ function combineRight(row) {
 }
 
 function moveRight() {
+    let currentState= cells.map(cell => cell.value)
+    moveHistory.push(currentState) 
     for (let i = 0; i < 16; i += 4) {
       let row = [
         cells[i].value,
@@ -113,6 +130,8 @@ function moveRight() {
 
 
 function moveLeft() {
+    let currentState= cells.map(cell => cell.value)
+    moveHistory.push(currentState) 
     for (let i = 0; i < 16; i += 4) {
         let row = [cells[i].value, cells[i + 1].value, cells[i + 2].value, cells[i + 3].value]
         row = slideLeft(row)
@@ -121,6 +140,7 @@ function moveLeft() {
         [cells[i].value, cells[i + 1].value, cells[i + 2].value, cells[i + 3].value] = row;
     }
     updateBoard()
+    
 }
 
 function newGame() {
@@ -134,6 +154,8 @@ function newGame() {
 }
 
 function moveUp() {
+    let currentState= cells.map(cell => cell.value)
+    moveHistory.push(currentState) 
     for (let i = 0; i < 4; i++) {
         let row = [cells[i].value, cells[i + 4].value, cells[i + 8].value, cells[i + 12].value]
         row = slideLeft(row)
@@ -144,7 +166,11 @@ function moveUp() {
     updateBoard()
 }
 
+
+
 function moveDown() {
+    let currentState= cells.map(cell => cell.value)
+    moveHistory.push(currentState) 
     for (let i = 0; i < 4; i++) {
         let row = [cells[i].value, cells[i + 4].value, cells[i + 8].value, cells[i + 12].value]
         row = slideRight(row)
@@ -238,10 +264,54 @@ function updateScore() {
 
 createGrid();
 
+gridContainer.addEventListener('touchstart', function(event){
+    touchStart.x = event.touches[0].clientX
+    touchStart.y = event.touches[0].clientY
+})
+
+gridContainer.addEventListener('touchmove', function (event) {
+    if(!touchStart.x || !touchStart.y){
+   
+        return
+    }
+    //let swipeInProgress = false
+    let touchEndX = event.touches[0].clientX
+    let touchEndY = event.touches[0].clientY
+    let dx = touchEndX - touchStart.x
+    let dy = touchEndY - touchStart.y
+    if(Math.abs(dx) > Math.abs(dy)){
+        if(dx > 0){
+            moveRight()
+            console.log('moveRight')
+        }else{
+            moveLeft()
+            console.log('moveLeft')
+        }
+    }else{
+        if(dy > 0){
+            moveDown()
+            console.log('moveDown')
+        }else{
+            moveUp()
+            console.log('moveUp')
+        }
+    }
+  //  swipeInProgress = true
+    touchStart.x = null
+    touchStart.y = null
+  
+})
+
+gridContainer.addEventListener('touchend', function(){
+   // swipeInProgress = false
+    touchStart.x = null
+    touchStart.y = null
+})
+
 newGameButtonWin.addEventListener('click',newGame)
 newGameButton.addEventListener('click',newGame)
 document.addEventListener('keyup',handleKeyUp);
-
+returnButton.addEventListener('clcik', undoMove)
 
 
 // event.key == 'd' 
