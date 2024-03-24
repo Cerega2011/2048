@@ -334,5 +334,5 @@ returnButton.addEventListener('click', function () {
     console.log('returnButton')
 })
 chooseGame.addEventListener('click', function(){
-    resizeGrid(6)
+    resizeGrid(8)
 })

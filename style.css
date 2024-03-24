@@ -29,6 +29,11 @@ body{
     margin-bottom: 20px;
 }
 
+.menu__button-field {
+    padding: 100px;
+
+}
+
 .grid__container{
     display: grid;
     grid-template-columns: repeat(4, 100px);
@@ -134,6 +139,8 @@ button{
     opacity: 1;
 }
 
+
+
 @keyframes appear{
     from{
         transform: scale(0.5);
@@ -159,4 +166,27 @@ button{
     animation: move 500ms ease-in-out;
     --moveX : 0;
     --moveY : 0;
+}
+
+.menu{
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    justify-content: center;
+    
+}
+
+.menu-wrapper{
+    padding: 30px 0;
+    outline: 3px red solid;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: minmax(70px, 100px);
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
 }
