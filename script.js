@@ -6,6 +6,7 @@ let gameContainerWin = document.querySelector(".game__container-win")
 let chooseGame = document.querySelector(".choose__game")
 let gridCell
 let canUndo = true
+let gridSize = 4
 let touchStart = {
     x: null,
     y: null
@@ -54,7 +55,7 @@ function checkForWin() {
 
 
 function createGrid() {
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < gridSize * gridSize; i++) {
         gridCell = document.createElement('div');
         gridCell.classList.add('grid-cell');
         gridCell.innerHTML = 0;
@@ -67,11 +68,12 @@ function createGrid() {
 }
 
 function resizeGrid(size) {
+    gridSize = size
     gridContainer.style.gridTemplateColumns = 'repeat(6, 100px)'
     gridContainer.style.gridTemplateRows = 'repeat(6, 100px)'
     gridContainer.innerHTML = ''
     cells = []
-    for(let i = 0; i < size; i++){
+    for(let i = 0; i < gridSize * gridSize; i++){
         gridCell = document.createElement('div');
         gridCell.classList.add('grid-cell');
         gridCell.innerHTML = 0;
@@ -104,7 +106,7 @@ function addNumber() {
 
 function slideRight(row) {
     let arr = row.filter(val => val);
-    let missing = 4 - arr.length;
+    let missing = gridSize - arr.length;
     let zeros = Array(missing).fill(0);
     arr = zeros.concat(arr);
     return arr;
@@ -126,7 +128,7 @@ function combineRight(row) {
 function moveRight() {
     let currentState = cells.map(cell => cell.value)
     moveHistory.push(currentState)
-    for (let i = 0; i < 16; i += 4) {
+    for (let i = 0; i < gridSize * gridSize; i += gridSize) {
         let row = [
             cells[i].value,
             cells[i + 1].value,
@@ -152,10 +154,9 @@ function moveRight() {
 
 
 function moveLeft() {
-
     let currentState = cells.map(cell => cell.value)
     moveHistory.push(currentState)
-    for (let i = 0; i < 16; i += 4) {
+    for (let i = 0; i < gridSize * gridSize; i += gridSize) {
         let row = [cells[i].value, cells[i + 1].value, cells[i + 2].value, cells[i + 3].value]
         row = slideLeft(row)
         row = combineLeft(row);
@@ -180,34 +181,43 @@ function newGame() {
 function moveUp() {
     let currentState = cells.map(cell => cell.value)
     moveHistory.push(currentState)
-    for (let i = 0; i < 6; i++) {
-        let row = [cells[i].value, cells[i + 6].value, cells[i + 12].value, cells[i + 18].value, cells[i + 24].value, cells[i + 30].value]
-        row = slideLeft(row)
+    for (let i = 0; i < gridSize * gridSize; i++) {
+        let row = [];
+        for (let j = i; j < cells.length; j += gridSize) {
+            row.push(cells[j].value);
+        }
+        row = slideLeft(row);
         row = combineLeft(row);
         row = slideLeft(row);
-        [cells[i].value, cells[i + 6].value, cells[i + 12].value, cells[i + 18].value, cells[i + 24].value, cells[i + 30].value] = row;
+        for (let j = i, k = 0; j < cells.length && k < row.length; j += gridSize, k++) {
+            cells[j].value = row[k];
+        }
     } 
     addNumber()
     updateBoard()
     canUndo = true
 }
-
-
 
 function moveDown() {
     let currentState = cells.map(cell => cell.value)
     moveHistory.push(currentState)
-    for (let i = 0; i < 4; i++) {
-        let row = [cells[i].value, cells[i + 4].value, cells[i + 8].value, cells[i + 12].value]
-        row = slideRight(row)
+    for (let i = gridSize - 1; i >= 0; i--) {
+        let row = [];
+        for (let j = i; j < cells.length; j += gridSize) {
+            row.push(cells[j].value);
+        }
+        row = slideRight(row);
         row = combineRight(row);
         row = slideRight(row);
-        [cells[i].value, cells[i + 4].value, cells[i + 8].value, cells[i + 12].value] = row;
+        for (let j = i, k = 0; j < cells.length && k < row.length; j += gridSize, k++) {
+            cells[j].value = row[k];
+        }
     } 
     addNumber()
     updateBoard()
     canUndo = true
 }
+
 
 function combineLeft(row) {
     for (let i = 0; i <= 2; i++) {
@@ -224,14 +234,14 @@ function combineLeft(row) {
 
 function slideLeft(row) {
     let arr = row.filter(val => val);
-    let missing = 4 - arr.length;
+    let missing = gridSize * gridSize - arr.length;
     let zeros = Array(missing).fill(0);
     arr = arr.concat(zeros);
     return arr;
 }
 
 function updateBoard() {
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < gridSize * gridSize; i++) {
         let cell = cells[i];
 
         if (cell.value === 0) {
@@ -247,42 +257,9 @@ function updateBoard() {
             cell.element.classList.add('grid-cell-super');
         }
     }
-    // addNumber();
     updateScore();
     checkForWin()
 }
-// function updateBoard() {
-//     cells.forEach(cell => {
-//         if (cell.moved) {
-//             cell.element.classList.add('moving');
-//             cell.element.style.setProperty('--moveX', `${cell.moveX * 110}px`); 
-//             cell.element.style.setProperty('--moveY', `${cell.moveY * 110}px`);
-//             setTimeout(() => {
-//                 cell.element.classList.remove('moving');
-//                 cell.moved = false; 
-//             }, 200); 
-//         }
-//     });
-
-//     for (let i = 0; i < 16; i++) {
-//         let cell = cells[i];
-
-//         if (cell.value === 0) {
-//             cell.element.innerHTML = '';
-//         } else {
-//             cell.element.innerHTML = cell.value;
-//         }
-//         cell.element.className = 'grid-cell';
-//         if (cell.value) {
-//             cell.element.classList.add('grid-cell-' + cell.value);
-//         }
-//         if (cell.value > 2048) {
-//             cell.element.classList.add('grid-cell-super');
-//         }
-//     }
-//     addNumber();
-//     updateScore();
-// }
 
 function updateScore() {
     scoreText.innerText = score;
@@ -302,7 +279,6 @@ gridContainer.addEventListener('touchmove', function (event) {
 
         return
     }
-    //let swipeInProgress = false
     let touchEndX = event.touches[0].clientX
     let touchEndY = event.touches[0].clientY
     let dx = touchEndX - touchStart.x
@@ -324,14 +300,12 @@ gridContainer.addEventListener('touchmove', function (event) {
             console.log('moveUp')
         }
     }
-    //  swipeInProgress = true
     touchStart.x = null
     touchStart.y = null
 
 })
 
 gridContainer.addEventListener('touchend', function () {
-    // swipeInProgress = false
     touchStart.x = null
     touchStart.y = null
 })
@@ -344,7 +318,5 @@ returnButton.addEventListener('click', function () {
     console.log('returnButton')
 })
 chooseGame.addEventListener('click', function(){
-    resizeGrid(36)
+    resizeGrid(6)
 })
-
-// event.key == 'd' 
