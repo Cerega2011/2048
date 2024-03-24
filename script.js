@@ -68,12 +68,12 @@ function createGrid() {
 }
 
 function resizeGrid(size) {
-    gridSize = size
-    gridContainer.style.gridTemplateColumns = 'repeat(6, 100px)'
-    gridContainer.style.gridTemplateRows = 'repeat(6, 100px)'
-    gridContainer.innerHTML = ''
-    cells = []
-    for(let i = 0; i < gridSize * gridSize; i++){
+    gridSize = size;
+    gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
+    gridContainer.style.gridTemplateRows = `repeat(${gridSize}, 100px)`;
+    gridContainer.innerHTML = '';
+    cells = [];
+    for (let i = 0; i < gridSize * gridSize; i++) {
         gridCell = document.createElement('div');
         gridCell.classList.add('grid-cell');
         gridCell.innerHTML = 0;
@@ -82,8 +82,9 @@ function resizeGrid(size) {
     }
     addNumber();
     addNumber();
-    updateBoard()
+    updateBoard();
 }
+
 
 function addNumber() {
 
@@ -112,8 +113,21 @@ function slideRight(row) {
     return arr;
 }
 
+function combineDown(row) {
+    for (let i = gridSize - 1; i >= 1; i--) {
+        let a = row[i];
+        let b = row[i - 1];
+        if (a === b) {
+            row[i] = a + b;
+            score += row[i];
+            row[i - 1] = 0;
+        }
+    }
+    return row
+}
+
 function combineRight(row) {
-    for (let i = 3; i >= 1; i--) {
+    for (let i = gridSize - 1; i > 0; i--) {
         let a = row[i];
         let b = row[i - 1];
         if (a === b) {
@@ -126,46 +140,47 @@ function combineRight(row) {
 }
 
 function moveRight() {
-    let currentState = cells.map(cell => cell.value)
-    moveHistory.push(currentState)
+    let currentState = cells.map(cell => cell.value);
+    moveHistory.push(currentState);
+
     for (let i = 0; i < gridSize * gridSize; i += gridSize) {
-        let row = [
-            cells[i].value,
-            cells[i + 1].value,
-            cells[i + 2].value,
-            cells[i + 3].value,
-        ];
+        let row = [];
+        for (let j = 0; j < gridSize; j++) {
+            row.push(cells[i + j].value);
+        }
         row = slideRight(row);
         row = combineRight(row);
         row = slideRight(row);
-        [
-            cells[i].value,
-            cells[i + 1].value,
-            cells[i + 2].value,
-            cells[i + 3].value,
-        ] = row;
+        for (let j = 0; j < gridSize; j++) {
+            cells[i + j].value = row[j];
+        }
     }
-    addNumber()
+
+    addNumber();
     updateBoard();
-    canUndo = true
-
+    canUndo = true;
 }
-
-
 
 function moveLeft() {
     let currentState = cells.map(cell => cell.value)
     moveHistory.push(currentState)
+
     for (let i = 0; i < gridSize * gridSize; i += gridSize) {
-        let row = [cells[i].value, cells[i + 1].value, cells[i + 2].value, cells[i + 3].value]
-        row = slideLeft(row)
-        row = combineLeft(row);
-        row = slideLeft(row);
-        [cells[i].value, cells[i + 1].value, cells[i + 2].value, cells[i + 3].value] = row;
+        let row = [];
+        for (let j = 0; j < gridSize; j++) {
+            row.push(cells[i + gridSize - 1 - j].value);
+        }
+        row = slideRight(row);
+        row = combineRight(row);
+        row = slideRight(row);
+        for (let j = 0; j < gridSize; j++) {
+            cells[i + gridSize - 1 - j].value = row[j];
+        }
     }
+
     addNumber()
-    updateBoard()
-    canUndo = true
+    updateBoard();
+    canUndo = true;
 }
 
 function newGame() {
@@ -207,7 +222,7 @@ function moveDown() {
             row.push(cells[j].value);
         }
         row = slideRight(row);
-        row = combineRight(row);
+        row = combineDown(row);
         row = slideRight(row);
         for (let j = i, k = 0; j < cells.length && k < row.length; j += gridSize, k++) {
             cells[j].value = row[k];
@@ -215,6 +230,7 @@ function moveDown() {
     } 
     addNumber()
     updateBoard()
+    
     canUndo = true
 }
 
