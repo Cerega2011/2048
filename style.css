@@ -131,7 +131,7 @@ button{
     border-radius: 5px;
     border: none;
     cursor: pointer;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 .game__container-win__active{
@@ -139,7 +139,32 @@ button{
     opacity: 1;
 }
 
+.achivments{
+    background-image: url(achievements.svg);
+    background-size: 50px 50px;
+    background-color:blueviolet;
+    height: 50px;
+    width: 50px;
+}
 
+.records{
+    background-image: url('records.svg');
+    background-size: 50px 50px;
+    background-color: red;
+
+    height: 50px ;
+    width: 50px;
+}
+
+.close{
+    background-image: url(close.svg) ;
+    height: 50px ;
+    width: 50px;
+    background-color: transparent;
+    position: absolute;
+    top: 10px;
+    right: 480px;
+}
 
 @keyframes appear{
     from{
@@ -168,25 +193,42 @@ button{
     --moveY : 0;
 }
 
+.menu__button-wrapper{
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+
+    justify-content: space-around;
+}
+
 .menu{
     display: flex;
-    background: rgba(0, 0, 0, 0.5);
+    background-color:#ffde85;
     height: 100%;
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     justify-content: center;
-    
+}
+
+.visibility-hidden{
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    padding: 0;
 }
 
 .menu-wrapper{
     padding: 30px 0;
-    outline: 3px red solid;
     display: grid;
     grid-template-columns: repeat(2,1fr);
     grid-template-rows: minmax(70px, 100px);
     gap: 30px;
     justify-content: center;
     align-items: center;
+    height: auto;
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
 }

@@ -4,6 +4,8 @@ let gridContainer = document.querySelector(".grid__container")
 let scoreText = document.querySelector(".score__text")
 let gameContainerWin = document.querySelector(".game__container-win")
 let chooseGame = document.querySelector(".choose__game")
+let closeButton = document.querySelector('.close')
+let menu = document.querySelector('.menu')
 let gridCell
 let canUndo = true
 let gridSize = 4
@@ -335,4 +337,8 @@ returnButton.addEventListener('click', function () {
 })
 chooseGame.addEventListener('click', function(){
     resizeGrid(8)
+})
+
+closeButton.addEventListener('click', function(){
+    menu.classList.add('visibility-hidden')
 })
