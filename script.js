@@ -1,3 +1,21 @@
+
+document.addEventListener('DOMContentLoaded', function () {
+    
+
+let ysdk
+
+function initGame(params) {
+    YaGames
+    .init()
+    .then(ysdk => {
+        console.log('Yandex SDK initialized');
+        window.ysdk = ysdk;
+    });
+}
+
+initGame()
+
+
 let newGameButton = document.querySelector(".new_game-button")
 let newGameButtonWin = document.querySelector(".win__game-Button")
 let gridContainer = document.querySelector(".grid__container")
@@ -20,6 +38,8 @@ let touchStart = {
     x: null,
     y: null
 }
+
+
 
 let returnButton = document.querySelector('.return_button')
 let moveHistory = []
@@ -381,4 +401,7 @@ fieldButton5x5.addEventListener('click', function(){
 fieldButton4x4.addEventListener('click', function(){
     resizeGrid(4)
     closedMenu()
+})
+
+
 })
