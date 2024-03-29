@@ -3,9 +3,16 @@ let newGameButtonWin = document.querySelector(".win__game-Button")
 let gridContainer = document.querySelector(".grid__container")
 let scoreText = document.querySelector(".score__text")
 let gameContainerWin = document.querySelector(".game__container-win")
-let chooseGame = document.querySelector(".choose__game")
 let closeButton = document.querySelector('.close')
 let menu = document.querySelector('.menu')
+let menuButton = document.querySelector('.menu-button')
+let fieldButton4x4 = document.querySelector('.field4x4')
+let fieldButton5x5 = document.querySelector('.field5x5')
+let fieldButton6x6 = document.querySelector('.field6x6')
+let fieldButton8x8 = document.querySelector('.field7x7')
+let bgMusic = new Audio()
+bgMusic.src = '/sounds/bacroundMusic.mp3'
+bgMusic.volume = 0.3
 let gridCell
 let canUndo = true
 let gridSize = 4
@@ -18,7 +25,7 @@ let returnButton = document.querySelector('.return_button')
 let moveHistory = []
 let cells = []
 let score = 0
-
+// bgMusic.play()
 function undoMove() {
     
     if (moveHistory.length > 0 && canUndo) {
@@ -283,6 +290,14 @@ function updateScore() {
     scoreText.innerText = score;
 }
 
+function closedMenu() {
+    menu.classList.add('visibility-hidden')
+
+}
+
+function openedMenu(params) {
+    menu.classList.remove('visibility-hidden')
+}
 
 
 createGrid();
@@ -328,6 +343,10 @@ gridContainer.addEventListener('touchend', function () {
     touchStart.y = null
 })
 
+
+
+
+
 newGameButtonWin.addEventListener('click', newGame)
 newGameButton.addEventListener('click', newGame)
 document.addEventListener('keyup', handleKeyUp);
@@ -335,10 +354,31 @@ returnButton.addEventListener('click', function () {
     undoMove()
     console.log('returnButton')
 })
-chooseGame.addEventListener('click', function(){
-    resizeGrid(8)
-})
 
 closeButton.addEventListener('click', function(){
-    menu.classList.add('visibility-hidden')
+    closedMenu()
+})
+
+menuButton.addEventListener('click', function(){
+   openedMenu()
+})
+
+fieldButton8x8.addEventListener('click', function(){
+    resizeGrid(8)
+    closedMenu()
+})
+
+fieldButton6x6.addEventListener('click', function(){
+    resizeGrid(6)
+    closedMenu()
+})
+
+fieldButton5x5.addEventListener('click', function(){
+    resizeGrid(5)
+    closedMenu()
+})
+
+fieldButton4x4.addEventListener('click', function(){
+    resizeGrid(4)
+    closedMenu()
 })
