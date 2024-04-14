@@ -31,6 +31,9 @@ body {
   width: 35%;
   padding: 100px;
   margin: 0 60px 0 0;
+  color: black;
+  background-repeat: no-repeat;
+  
 }
 
 .menu__button-field:nth-child(2),
@@ -42,7 +45,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 100px);
   gap: 10px;
-  background-color: #bbada0;
+  background-color: #444a64;
   padding: 10px;
   border-radius: 10px;
 }
@@ -51,62 +54,74 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #cdc1b4;
+  /* background-color: #cdc1b4; */
+  background-color: #5e687f;
   color: #776e65;
   border-radius: 5px;
   animation: appear 500ms ease-in-out;
 }
 
 .grid-cell-2 {
-  background-color: #eee4da;
+  background-color: #c8bfde;
 }
 
 .grid-cell-4 {
-  background-color: #ede0c8;
+  /* background-color: #ede0c8; */
+  background-color:#9c8cbd ;
+  color: #f9f6f2;
 }
 
+
 .grid-cell-8 {
-  background-color: #f2b179;
+  /* background-color: #f2b179; */
+  background-color: #77abda;
   color: #f9f6f2;
 }
 
 .grid-cell-16 {
-  background-color: #f59563;
+  /* background-color: #f59563; */
   color: #f9f6f2;
+  background-color: #2185c1;
 }
 
 .grid-cell-32 {
-  background-color: #f67c5f;
+  /* background-color: #f67c5f; */
+  background-color: #80cdef;
   color: #f9f6f2;
 }
 
 .grid-cell-64 {
-  background-color: #f65e3b;
-  color: #f9f6f2;
+  /* background-color: #f65e3b; */
+  background-color: #38b8e7;
+
 }
 
 .grid-cell-128 {
-  background-color: #edcf72;
+  /* background-color: #edcf72; */
+  background-color: #715c9f;
   color: #f9f6f2;
 }
 
 .grid-cell-256 {
-  background-color: #edcc61;
+  /* background-color: #edcc61; */
+  background-color: #9567a0;
+
   color: #f9f6f2;
 }
 
 .grid-cell-512 {
-  background-color: #edc850;
+  /* background-color: #edc850; */
+  background-color: #4a318c;
   color: #f9f6f2;
 }
 
 .grid-cell-1024 {
-  background-color: #edc53f;
+  background-color: #440d30;
   color: #f9f6f2;
 }
 
 .grid-cell-2048 {
-  background-color: #edc22e;
+  background-color: #2d176f;
   color: #f9f6f2;
 }
 
@@ -249,4 +264,28 @@ button {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.field5x5{
+  background-image: url(/images/5x5.png);
+  background-position: center;
+  background-size: cover;
+}
+
+.field6x6{
+  background-image: url(/images/6x6.png);
+  background-position: center;
+  background-size: cover;
+}
+
+.field8x8{
+  background-image: url(/images/8x8.png);
+  background-position: center;
+  background-size: cover;
+}
+
+.field4x4{
+  background-image: url(/images/4x4.png);
+  background-position: center;
+  background-size: cover;
 }
