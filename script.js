@@ -418,7 +418,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     closeButton.addEventListener("click", function () {
+        resizeGrid(4)
         closedMenu();
+        
     });
 
     menuButton.addEventListener("click", function () {

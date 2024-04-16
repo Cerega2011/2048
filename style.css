@@ -1,6 +1,17 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: calc(100vw / 1920 * 10);
+}
+
+.buttons__wrapper{
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 4rem;
 }
 
 body {
@@ -13,10 +24,28 @@ body {
   position: relative;
 }
 
+@media (max-width: 1024px) {
+  html {
+    font-size: calc(100vw / 768 * 10);
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: calc(100vw / 500 * 10);
+  }
+}
+
+@media (max-width: 500px) {
+  html {
+    font-size: calc(100vw / 375 * 10);
+  }
+}
+
 .all__elements__container {
   display: flex;
   justify-content: space-between;
-  margin: 0 0 30px 0;
+  margin: 0 0 3rem 0;
 }
 
 .game__container {
@@ -24,30 +53,26 @@ body {
 }
 
 .score__container {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
 }
 
 .menu__button-field {
-  width: 35%;
-  padding: 100px;
-  margin: 0 60px 0 0;
+  width: 3.5rem;
+  padding: 10rem;
   color: black;
   background-repeat: no-repeat;
-  
-}
-
-.menu__button-field:nth-child(2),
-.menu__button-field:nth-child(4) {
-  margin: 0;
+  font-size: 2.5rem;
+  height: 3.5rem;
 }
 
 .grid__container {
   display: grid;
-  grid-template-columns: repeat(4, 100px);
-  gap: 10px;
+  grid-template-columns: repeat(4, 10rem);
+  gap: 1rem;
   background-color: #444a64;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .grid-cell {
@@ -57,8 +82,9 @@ body {
   /* background-color: #cdc1b4; */
   background-color: #5e687f;
   color: #776e65;
-  border-radius: 5px;
+  border-radius: 0.5rem;
   animation: appear 500ms ease-in-out;
+  font-size: 2.5rem;
 }
 
 .grid-cell-2 {
@@ -132,17 +158,17 @@ body {
 
 .game__container-win {
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 10rem;
+  height: 10rem;
   background-color: rgba(0, 0, 0, 0.5);
   color: #ffffff;
-  border-radius: 19px;
+  border-radius: 1.9rem;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   position: absolute;
-  top: 0%;
-  left: 0%;
+  top: 0;
+  left: 0;
   opacity: 0;
 
   visibility: hidden;
@@ -151,8 +177,8 @@ body {
 button {
   color: white;
   background-color: black;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
   border: none;
   cursor: pointer;
 }
@@ -164,44 +190,41 @@ button {
 
 .achivments {
   background-image: url(./images/achievements.svg);
-  background-size: 100px 100px;
+  background-size: 10rem 10rem;
   background-color: blueviolet;
-  height: 100px;
-  width: 100px;
+  height: 10rem;
+  width: 10rem;
 }
 
 .records {
   background-image: url(./images/records.svg);
-  background-size: 100px 100px;
+  background-size: 10rem 10rem;
   background-repeat: no-repeat;
   background-color: red;
-  height: 100px;
-  width: 100px;
+  height: 10rem;
+  width: 10rem
 }
 
 .close {
   background-image: url(./images/close.svg);
-  height: 50px;
-  width: 50px;
+  height: 5rem;
+  width: 5rem;
   background-color: transparent;
-  position: absolute;
-  top: 0px;
-  right: 45%;
 }
 
 .menu-button {
   background-image: url(./images/home-button.svg);
-  width: 50px;
-  height: 50px;
-  background-size: 50px 50px;
+  width: 5rem;
+  height: 5rem;
+  background-size: 5rem 5rem;
   background-color: transparent;
 }
 
 .return_button {
   background-image: url(./images/revert-button.svg);
-  width: 50px;
-  height: 50px;
-  background-size: 50px 50px;
+  width: 5rem;
+  height: 5rem;
+  background-size: 5rem 5rem;
   background-color: transparent;
 }
 
@@ -232,11 +255,13 @@ button {
 }
 
 .menu__button-wrapper {
-  grid-column: 1 / -1;
-  width: 100%;
+  /* grid-column: 1 / -1; */
+  /* width: 100%;
   display: flex;
-  position: relative;
-  justify-content: space-around;
+  position: relative; */
+  /* justify-content: space-around; */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .menu {
@@ -258,12 +283,13 @@ button {
 }
 
 .menu-wrapper {
-  outline: 3px red solid;
+
   width: 40%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+flex-direction: column;
+gap: 4rem;
 }
 
 .field5x5{
