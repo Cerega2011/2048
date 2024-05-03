@@ -8,10 +8,10 @@ html {
   font-size: calc(100vw / 1920 * 10);
 }
 
-.buttons__wrapper{
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 4rem;
+.buttons__wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
 }
 
 body {
@@ -26,19 +26,19 @@ body {
 
 @media (max-width: 1024px) {
   html {
-    font-size: calc(100vw / 768 * 10);
+    font-size: calc(100vw / 1024 * 10);
   }
 }
 
 @media (max-width: 768px) {
   html {
-    font-size: calc(100vw / 500 * 10);
+    font-size: calc(100vw / 768 * 10);
   }
 }
 
 @media (max-width: 500px) {
   html {
-    font-size: calc(100vw / 375 * 10);
+    font-size: calc(100vw / 500 * 10);
   }
 }
 
@@ -58,12 +58,17 @@ body {
 }
 
 .menu__button-field {
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 3.5rem;
+  height: 3.5rem;
   padding: 10rem;
   color: black;
   background-repeat: no-repeat;
   font-size: 2.5rem;
-  height: 3.5rem;
 }
 
 .grid__container {
@@ -93,10 +98,9 @@ body {
 
 .grid-cell-4 {
   /* background-color: #ede0c8; */
-  background-color:#9c8cbd ;
+  background-color: #9c8cbd;
   color: #f9f6f2;
 }
-
 
 .grid-cell-8 {
   /* background-color: #f2b179; */
@@ -119,7 +123,6 @@ body {
 .grid-cell-64 {
   /* background-color: #f65e3b; */
   background-color: #38b8e7;
-
 }
 
 .grid-cell-128 {
@@ -189,7 +192,7 @@ button {
 }
 
 .achivments {
-  background-image: url(./images/achievements.svg);
+  background-image: url(images/achievements.svg);
   background-size: 10rem 10rem;
   background-color: blueviolet;
   height: 10rem;
@@ -197,23 +200,23 @@ button {
 }
 
 .records {
-  background-image: url(./images/records.svg);
+  background-image: url(images/records.svg);
   background-size: 10rem 10rem;
   background-repeat: no-repeat;
   background-color: red;
   height: 10rem;
-  width: 10rem
+  width: 10rem;
 }
 
 .close {
-  background-image: url(./images/close.svg);
+  background-image: url(images/close.svg);
   height: 5rem;
   width: 5rem;
   background-color: transparent;
 }
 
 .menu-button {
-  background-image: url(./images/home-button.svg);
+  background-image: url(images/home-button.svg);
   width: 5rem;
   height: 5rem;
   background-size: 5rem 5rem;
@@ -221,7 +224,7 @@ button {
 }
 
 .return_button {
-  background-image: url(./images/revert-button.svg);
+  background-image: url(images/revert-button.svg);
   width: 5rem;
   height: 5rem;
   background-size: 5rem 5rem;
@@ -255,18 +258,15 @@ button {
 }
 
 .menu__button-wrapper {
-  /* grid-column: 1 / -1; */
-  /* width: 100%;
   display: flex;
-  position: relative; */
-  /* justify-content: space-around; */
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-between;
+  align-items: center;
+  gap: 5rem;
 }
 
 .menu {
   display: flex;
-  background-color: #ffde85;
+  background-color: #000000;
   height: 100%;
   position: fixed;
   left: 0;
@@ -276,42 +276,97 @@ button {
   /* opacity: 0;
   visibility: hidden; */
 }
-
+/* #ffde85 */
 .visibility-hidden {
   opacity: 0;
   visibility: hidden;
 }
 
 .menu-wrapper {
-
   width: 40%;
   display: flex;
   align-items: center;
   justify-content: center;
-flex-direction: column;
-gap: 4rem;
+  flex-direction: column;
+  gap: 4rem;
 }
 
-.field5x5{
-  background-image: url(/images/5x5.png);
-  background-position: center;
-  background-size: cover;
+.field5x5 {
+  background-image: url(images/5x5.png);
 }
 
-.field6x6{
-  background-image: url(/images/6x6.png);
-  background-position: center;
-  background-size: cover;
+.field6x6 {
+  background-image: url(images/6x6.png);
 }
 
-.field8x8{
-  background-image: url(/images/8x8.png);
-  background-position: center;
-  background-size: cover;
+.field8x8 {
+  background-image: url(images/8x8.png);
 }
 
-.field4x4{
-  background-image: url(/images/4x4.png);
-  background-position: center;
-  background-size: cover;
+.field4x4 {
+  background-image: url(images/4x4.png);
+}
+
+.standings {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.standings-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.standings__close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.show-standings {
+  display: block;
+}
+
+body.standings-open {
+  overflow: hidden;
+}
+
+.tournamentTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.tournamentTable th,
+.tournamentTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.tournamentTable th {
+  background-color: #f2f2f2;
+}
+
+@media screen and (max-width: 600px) {
+  .standings-content {
+    margin: 30% auto;
+    width: 90%;
+  }
 }
