@@ -203,7 +203,7 @@ button {
   background-image: url(images/records.svg);
   background-size: 10rem 10rem;
   background-repeat: no-repeat;
-  background-color: red;
+  background-color: orange;
   height: 10rem;
   width: 10rem;
 }
@@ -266,7 +266,7 @@ button {
 
 .menu {
   display: flex;
-  background-color: #000000;
+  background-color: rgb(88, 11, 55);
   height: 100%;
   position: fixed;
   left: 0;
