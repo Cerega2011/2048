@@ -2,30 +2,31 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   const recordsButton = document.querySelector(".records");
-  const modal = document.querySelector(".recordsModal");
+  const recordsModal = document.querySelector(".recordsModal");
   const standingsCloseButton = document.querySelector(
     ".standings__close-button"
   );
 
-  recordsButton.addEventListener("click", function () {
-    modal.classList.add("show-standings");
-    document.body.classList.add("standings-open");
-  });
 
-  standingsCloseButton.addEventListener("click", function () {
-    modal.classList.remove("show-standings");
-    document.body.classList.remove("standings-open");
-  });
-
-  window.addEventListener("click", function (event) {
-    if (event.target === modal) {
-      modal.classList.remove("show-standings");
-      document.body.classList.remove("standings-open");
-    }
-  });
-
-  let ysdk;
+  let ysdk; 
   let player;
+
+function hideAdressBar() {
+  setTimeout(function(){
+    document.body.style.height= window.outerHeight + 'px'
+    setTimeout(function(){
+      window.scrollTo(0,1)
+    }, 1100)
+  }, 1000)
+  return false
+}
+
+window.onload = function(){
+  hideAdressBar()
+  window.addEventListener('orientationchange', function(){
+    hideAdressBar()
+  }, false)
+}
 
   function initGame(params) {
     YaGames.init()
@@ -80,7 +81,9 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("ошибка при сохранении score на сервер", error);
       });
   }
-
+  let achivmentsModal = document.querySelector('.achievements')
+let achivmentsCloseButton = document.querySelector('.achievements__close-button')
+  let achivmentsButton = document.querySelector('.achievments-button')
   let newGameButton = document.querySelector(".new_game-button");
   let newGameButtonWin = document.querySelector(".win__game-Button");
   let gridContainer = document.querySelector(".grid__container");
@@ -452,6 +455,28 @@ document.addEventListener("DOMContentLoaded", function () {
   gridContainer.addEventListener("touchend", function () {
     touchStart.x = null;
     touchStart.y = null;
+  });
+
+  recordsButton.addEventListener("click", function () {
+    recordsModal.classList.add("show-standings");
+    document.body.classList.add("standings-open");
+  });
+
+  standingsCloseButton.addEventListener("click", function () {
+    recordsModal.classList.remove("show-standings");
+    document.body.classList.remove("standings-open");
+  });
+
+  // !!!!!!!!!!!!!!!
+  achivmentsButton.addEventListener("click", function () {
+    achivmentsModal.classList.add("show-achievements");
+    document.body.classList.add("achievements-open");
+    console.log('open')
+  });
+
+  achivmentsCloseButton.addEventListener("click", function () {
+    achivmentsModal.classList.remove("show-achievements");
+    document.body.classList.remove("achievements-open");
   });
 
   newGameButtonWin.addEventListener("click", newGame);
