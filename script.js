@@ -1,15 +1,22 @@
 // import "./style.css";
 
 document.addEventListener("DOMContentLoaded", function () {
+  let score = 0;
+  let ysdk;
+  let player;
+  let playerData = {};
+
+  const platform = "yandex";
+  const platforms = {
+    yandex: "yandex",
+    other: "other",
+  };
+
   const recordsButton = document.querySelector(".records");
   const recordsModal = document.querySelector(".recordsModal");
   const standingsCloseButton = document.querySelector(
     ".standings__close-button"
   );
-
-
-  let ysdk; 
-  let player;
 
 function hideAdressBar() {
   setTimeout(function(){
@@ -28,59 +35,186 @@ window.onload = function(){
   }, false)
 }
 
-  function initGame(params) {
-    YaGames.init()
-      .then((_ysdk) => {
-        console.log("Yandex SDK инициализирован");
-        ysdk = _ysdk;
-        initPlayer(); // Вызов initPlayer() только после инициализации ysdk
-      })
-      .catch((error) => {
-        console.error("Ошибка инициализации Yandex SDK:", error);
-      });
+function initGame(params) {
+  YaGames.init()
+    .then((_ysdk) => {
+      console.log("Yandex SDK инициализирован");
+      ysdk = _ysdk;
+      initPlayer();
+    })
+    .catch((error) => {
+      console.error("Ошибка инициализации Yandex SDK:", error);
+    });
+}
+
+function initPlayer() {
+  if (!ysdk) {
+    console.error("Ошибка: объект ysdk не был инициализирован.");
+    return;
+  }
+  ysdk
+    .getPlayer({ scopes: true })
+    .then((_player) => {
+      if (_player.getMode() === "lite") {
+        console.log("lite");
+        ysdk.auth
+          .openAuthDialog()
+          .then(() => {
+            // Игрок успешно авторизован.
+            initPlayer().catch((err) => {
+              // Ошибка при инициализации объекта Player.
+            });
+          })
+          .catch(() => {
+            // Игрок не авторизован.
+            ysdk.auth.openAuthDialog();
+            console.log("Игрок не авторизован.");
+          });
+      }
+      console.log("Данные игрока:", _player);
+      player = _player;
+    })
+    .catch((error) => {
+      console.error("Ошибка инициализации игрока:", error);
+    });
+}
+
+function savesScoretoServer(score) {
+  if (!player) {
+    console.error("Ошибка: объект player не был инициализирован.");
+    return;
   }
 
-  function initPlayer() {
-    ysdk
-      .getPlayer()
-      .then((_player) => {
-        console.log("Данные игрока:", _player);
-        player = _player
-      })
-      .catch((error) => {
-        console.error("Ошибка инициализации игрока:", error);
-      });
-  }
+  let currentPlayerId = player.getUniqueID();
+  let currentPlayerData = playerData[currentPlayerId];
 
-  initGame();
-
-
-
-  function savesScoretoServer(score) {
-    if (!player) {
-      console.error("Ошибка: объект player не был инициализирован.");
-      return;
-    }
-
-    let data = {
-      score: score,
+  if (!currentPlayerData || score > currentPlayerData.bestScore) {
+    let newData = {
+      username: player.getName(),
+      bestScore: score,
+      otherData: player.getData(),
     };
 
-    if (JSON.stringify(data) === JSON.stringify(player.getData())) {
-      console.warn('Данные не изменились, сохранение не требуется.')
-    return
-    }
-
+    playerData[currentPlayerId] = newData;
 
     player
-      .setData(data, true)
+      .setData(newData, true)
       .then(() => {
-        console.log("score успешно сохранён на сервер");
+        console.log("Лучший счет успешно обновлён на сервере:", score);
       })
       .catch((error) => {
-        console.error("ошибка при сохранении score на сервер", error);
+        console.error("Ошибка при сохранении лучшего счета:", error);
       });
+  } else {
+    console.warn("Новый счет не лучше текущего лучшего счета.");
   }
+}
+
+function storage(loadcallback) {
+  if (!ysdk) {
+    console.error("Ошибка: объект ysdk не был инициализирован.");
+    return;
+  }
+
+  if (platform == platforms.yandex) {
+    console.log("storage");
+    ysdk
+      .getPlayer()
+      .then((player) => {
+        player
+          .getData()
+          .then((data) => {
+            console.log("data load");
+            console.log(data);
+            console.log(player.getName());
+            storage.get = function (key) {
+              return data[key];
+            };
+            storage.set = function (key, value) {
+              data[key] = value;
+            };
+            storage.push = function () {
+              player.setData(data).then(() => {
+                console.log("yandexsdk cloud push seccuss");
+                console.log(data);
+              });
+            };
+
+            storage.type = 1;
+
+            storage.getraw = function () {
+              return data;
+            };
+
+            loadcallback();
+            console.log("привязка хранилища к облаку yandexsdk");
+          })
+          .catch((err) => {
+            lssave();
+          });
+      })
+      .catch((err) => {
+        lssave();
+      });
+  } else {
+    lssave();
+  }
+
+  function lssave() {
+    console.log("привязка хранилища к localStorage");
+    storage.get = function (key) {
+      return localStorage[key];
+    };
+    storage.set = function (key, value) {
+      localStorage[key] = value;
+    };
+    storage.push = function () {};
+    storage.getraw = function () {
+      return localStorage;
+    };
+    storage.type = 0;
+    loadcallback();
+  }
+}
+
+function storageCallback() {
+  createTable();
+}
+
+storage(storageCallback);
+
+initGame();
+
+function createTable() {
+  let tableBody = document.querySelector(".tournamentTable tbody");
+  tableBody.innerHTML = "";
+
+  Object.keys(playerData).forEach((playerId, index) => {
+    let playerInfo = playerData[playerId];
+    let row = document.createElement("tr");
+
+    // Место
+    let placeCell = document.createElement("td");
+    placeCell.textContent = index + 1;
+    row.appendChild(placeCell);
+
+    // Логин игрока (Yandex ID)
+    let loginCell = document.createElement("td");
+    // loginCell.textContent = playerId;
+    loginCell.textContent = player.getName()
+    row.appendChild(loginCell);
+
+    // Лучший счет
+    let bestScoreCell = document.createElement("td");
+    bestScoreCell.textContent = playerInfo.bestScore || 0;
+    row.appendChild(bestScoreCell);
+
+    // Добавляем строку в таблицу
+    tableBody.appendChild(row);
+  });
+}
+
+
   let achivmentsModal = document.querySelector('.achievements')
 let achivmentsCloseButton = document.querySelector('.achievements__close-button')
   let achivmentsButton = document.querySelector('.achievments-button')
@@ -107,10 +241,11 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
     y: null,
   };
 
+  
+
   let returnButton = document.querySelector(".return_button");
   let moveHistory = [];
   let cells = [];
-  let score = 0;
   // bgMusic.play()
   function undoMove() {
     if (moveHistory.length > 0 && canUndo) {
@@ -238,7 +373,7 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row[i - 1] = 0;
       }
     }
-    return {row, score};
+    return { row, score };
   }
 
   function combineRight(row, score) {
@@ -251,7 +386,7 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row[i - 1] = 0;
       }
     }
-    return {row, score};
+    return { row, score };
   }
 
   function moveRight() {
@@ -264,7 +399,9 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row.push(cells[i + j].value);
       }
       row = slideRight(row);
-      row = combineRight(row);
+      let result = combineRight(row, score); // Передаем score в функцию combineRight
+      row = result.row;
+      score = result.score;
       row = slideRight(row);
       for (let j = 0; j < gridSize; j++) {
         cells[i + j].value = row[j];
@@ -286,7 +423,9 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row.push(cells[i + gridSize - 1 - j].value);
       }
       row = slideRight(row);
-      row = combineRight(row);
+      let result = combineRight(row, score);
+      row = result.row;
+      score = result.score;
       row = slideRight(row);
       for (let j = 0; j < gridSize; j++) {
         cells[i + gridSize - 1 - j].value = row[j];
@@ -317,7 +456,9 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row.push(cells[j].value);
       }
       row = slideLeft(row);
-      row = combineLeft(row);
+      let result = combineLeft(row, score);
+      row = result.row;
+      score = result.score;
       row = slideLeft(row);
       for (
         let j = i, k = 0;
@@ -341,7 +482,9 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row.push(cells[j].value);
       }
       row = slideRight(row);
-      row = combineDown(row);
+      let result = combineDown(row, score);
+      row = result.row;
+      score = result.score;
       row = slideRight(row);
       for (
         let j = i, k = 0;
@@ -357,7 +500,7 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
     canUndo = true;
   }
 
-  function combineLeft(row,score) {
+  function combineLeft(row, score) {
     for (let i = 0; i <= 2; i++) {
       let a = row[i];
       let b = row[i + 1];
@@ -367,13 +510,13 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
         row[i + 1] = 0;
       }
     }
-    return {row, score};
+    return { row, score };
   }
 
   function slideLeft(row) {
     if (!Array.isArray(row)) {
-      console.error('Ошибка: slideLeft ожидает аргумент типа массив')
-      return
+      console.error("Ошибка: slideLeft ожидает аргумент типа массив");
+      return;
     }
     let arr = row.filter((val) => val);
     let missing = gridSize * gridSize - arr.length;
@@ -405,7 +548,7 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
 
   function updateScore() {
     scoreText.innerText = score;
-  savesScoretoServer(score);
+    savesScoretoServer(score);
   }
 
   function closedMenu() {
@@ -457,35 +600,13 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
     touchStart.y = null;
   });
 
-  recordsButton.addEventListener("click", function () {
-    recordsModal.classList.add("show-standings");
-    document.body.classList.add("standings-open");
-  });
-
-  standingsCloseButton.addEventListener("click", function () {
-    recordsModal.classList.remove("show-standings");
-    document.body.classList.remove("standings-open");
-  });
-
-  // !!!!!!!!!!!!!!!
-  achivmentsButton.addEventListener("click", function () {
-    achivmentsModal.classList.add("show-achievements");
-    document.body.classList.add("achievements-open");
-    console.log('open')
-  });
-
-  achivmentsCloseButton.addEventListener("click", function () {
-    achivmentsModal.classList.remove("show-achievements");
-    document.body.classList.remove("achievements-open");
-  });
-
   newGameButtonWin.addEventListener("click", newGame);
   newGameButton.addEventListener("click", newGame);
   document.addEventListener("keyup", handleKeyUp);
   returnButton.addEventListener("click", function () {
     undoMove();
     console.log("returnButton");
-    // ysdk.adv.showFullscreenAdv();
+    ysdk.adv.showFullscreenAdv();
   });
 
   closeButton.addEventListener("click", function () {
@@ -515,5 +636,20 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
   fieldButton4x4.addEventListener("click", function () {
     resizeGrid(4);
     closedMenu();
+
+    
+  });
+
+  recordsButton.addEventListener('click', function () {
+    recordsModal.classList.add("show-standings");
+    document.body.classList.add("standings-open");
+    storage(storageCallback);
+  })
+
+  standingsCloseButton.addEventListener("click", function () {
+    recordsModal.classList.remove("show-standings");
+    document.body.classList.remove("standings-open");
   });
 });
+
+
