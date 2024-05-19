@@ -5,6 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
   let ysdk;
   let player;
   let playerData = {};
+  let newData = {};
+  
+ let achievment1Unlocked = false
+ let achievment2Unlocked = false
+ let achievment3Unlocked = false
+ let achievment4Unlocked = false
+let achievement1 = document.querySelector(".achievement_one")
+let achievement2 = document.querySelector(".achievement_two")
+let achievement3 = document.querySelector(".achievement_three")
+let achievement4 = document.querySelector(".achievement_four")
+let notification = document.querySelector('.notification')
 
   const platform = "yandex";
   const platforms = {
@@ -12,224 +23,282 @@ document.addEventListener("DOMContentLoaded", function () {
     other: "other",
   };
 
-  const recordsButton = document.querySelector(".records");
-  const recordsModal = document.querySelector(".recordsModal");
-  const standingsCloseButton = document.querySelector(
-    ".standings__close-button"
-  );
+  function checkAchievement(currentPlayerData) {
+    if(score >= 100 && !achievment1Unlocked){
+      achievement1.classList.add('achievement_done')
+      currentPlayerData.achievement1 = true
+      achievment1Unlocked = true
+      notification.classList.add('popup_opened')
+      setTimeout(() => {
+        notification.classList.remove('popup_opened')
+      },4000);
+      
+    }    
+    if(score >= 500 && !achievment2Unlocked){
+      achievement2.classList.add('achievement_done')
+      currentPlayerData.achievement2 = true
+      achievment2Unlocked = true
+      notification.classList.add('popup_opened')
+      setTimeout(() => {
+        notification.classList.remove('popup_opened')
+      },4000);
+      
+    }
+    if(score >= 1000 && !achievment3Unlocked){
+      achievement3.classList.add('achievement_done')
+      currentPlayerData.achievement3 = true
+      achievment3Unlocked = true
+      notification.classList.add('popup_opened')
+      setTimeout(() => {
+        notification.classList.remove('popup_opened')
+      },4000);
+      
+    }
+    if(score >= 5000 && !achievment4Unlocked){
+      achievement4.classList.add('achievement_done')
+      currentPlayerData.achievement4 = true
+      achievment4Unlocked = true
+      notification.classList.add('popup_opened')
+      setTimeout(() => {
+        notification.classList.remove('popup_opened')
+      },4000);
+    }
 
-function hideAdressBar() {
-  setTimeout(function(){
-    document.body.style.height= window.outerHeight + 'px'
-    setTimeout(function(){
-      window.scrollTo(0,1)
-    }, 1100)
-  }, 1000)
-  return false
-}
+    if(achievment1Unlocked || achievment2Unlocked || achievment3Unlocked || achievment4Unlocked) {
+      player
+        .setData(currentPlayerData, true)
+        .then(() => {
+          console.log('Данные достижений успешно обновлены на сервере')
+        })
+        .catch((error) => {
+          console.error('Ошибка при обновлении данных достижений', error)
+        })
+    }
+  } 
 
-window.onload = function(){
-  hideAdressBar()
-  window.addEventListener('orientationchange', function(){
-    hideAdressBar()
-  }, false)
-}
-
-function initGame(params) {
-  YaGames.init()
-    .then((_ysdk) => {
-      console.log("Yandex SDK инициализирован");
-      ysdk = _ysdk;
-      initPlayer();
-    })
-    .catch((error) => {
-      console.error("Ошибка инициализации Yandex SDK:", error);
-    });
-}
-
-function initPlayer() {
-  if (!ysdk) {
-    console.error("Ошибка: объект ysdk не был инициализирован.");
-    return;
-  }
-  ysdk
-    .getPlayer({ scopes: true })
-    .then((_player) => {
-      if (_player.getMode() === "lite") {
-        console.log("lite");
-        ysdk.auth
-          .openAuthDialog()
-          .then(() => {
-            // Игрок успешно авторизован.
-            initPlayer().catch((err) => {
-              // Ошибка при инициализации объекта Player.
-            });
-          })
-          .catch(() => {
-            // Игрок не авторизован.
-            ysdk.auth.openAuthDialog();
-            console.log("Игрок не авторизован.");
-          });
-      }
-      console.log("Данные игрока:", _player);
-      player = _player;
-    })
-    .catch((error) => {
-      console.error("Ошибка инициализации игрока:", error);
-    });
-}
-
-function savesScoretoServer(score) {
-  if (!player) {
-    console.error("Ошибка: объект player не был инициализирован.");
-    return;
+  function hideAdressBar() {
+    setTimeout(function () {
+      document.body.style.height = window.outerHeight + "px";
+      setTimeout(function () {
+        window.scrollTo(0, 1);
+      }, 1100);
+    }, 1000);
+    return false;
   }
 
-  let currentPlayerId = player.getUniqueID();
-  let currentPlayerData = playerData[currentPlayerId];
+  window.onload = function () {
+    hideAdressBar();
+    window.addEventListener(
+      "orientationchange",
+      function () {
+        hideAdressBar();
+      },
+      false
+    );
+  };
 
-  if (!currentPlayerData || score > currentPlayerData.bestScore) {
-    let newData = {
-      username: player.getName(),
-      bestScore: score,
-      otherData: player.getData(),
-    };
-
-    playerData[currentPlayerId] = newData;
-
-    player
-      .setData(newData, true)
-      .then(() => {
-        console.log("Лучший счет успешно обновлён на сервере:", score);
+  function initGame(params) {
+    YaGames.init()
+      .then((_ysdk) => {
+        console.log("Yandex SDK инициализирован");
+        ysdk = _ysdk;
+        initPlayer();
       })
       .catch((error) => {
-        console.error("Ошибка при сохранении лучшего счета:", error);
+        console.error("Ошибка инициализации Yandex SDK:", error);
       });
-  } else {
-    console.warn("Новый счет не лучше текущего лучшего счета.");
-  }
-}
-
-function storage(loadcallback) {
-  if (!ysdk) {
-    console.error("Ошибка: объект ysdk не был инициализирован.");
-    return;
   }
 
-  if (platform == platforms.yandex) {
-    console.log("storage");
+  function initPlayer() {
+    if (!ysdk) {
+      console.error("Ошибка: объект ysdk не был инициализирован.");
+      return;
+    }
     ysdk
-      .getPlayer()
-      .then((player) => {
-        player
-          .getData()
-          .then((data) => {
-            console.log("data load");
-            console.log(data);
-            console.log(player.getName());
-            storage.get = function (key) {
-              return data[key];
-            };
-            storage.set = function (key, value) {
-              data[key] = value;
-            };
-            storage.push = function () {
-              player.setData(data).then(() => {
-                console.log("yandexsdk cloud push seccuss");
-                console.log(data);
+      .getPlayer({ scopes: true })
+      .then((_player) => {
+        if (_player.getMode() === "lite") {
+          console.log("lite");
+          ysdk.auth
+            .openAuthDialog()
+            .then(() => {
+              // Игрок успешно авторизован.
+              initPlayer().catch((err) => {
+                console.log("Ошибка при инициализации объекта Player.2");
+                // Ошибка при инициализации объекта Player.
               });
-            };
-
-            storage.type = 1;
-
-            storage.getraw = function () {
-              return data;
-            };
-
-            loadcallback();
-            console.log("привязка хранилища к облаку yandexsdk");
-          })
-          .catch((err) => {
-            lssave();
-          });
+            })
+            .catch(() => {
+              // Игрок не авторизован.
+              ysdk.auth.openAuthDialog();
+              console.log("Игрок не авторизован.");
+            });
+        }
+        console.log("Данные игрока:", _player);
+        player = _player;
       })
-      .catch((err) => {
-        lssave();
+      .catch((error) => {
+        console.error("Ошибка инициализации игрока:", error);
       });
-  } else {
-    lssave();
   }
 
-  function lssave() {
-    console.log("привязка хранилища к localStorage");
-    storage.get = function (key) {
-      return localStorage[key];
-    };
-    storage.set = function (key, value) {
-      localStorage[key] = value;
-    };
-    storage.push = function () {};
-    storage.getraw = function () {
-      return localStorage;
-    };
-    storage.type = 0;
-    loadcallback();
+  function savesScoretoServer(score) {
+    if (!player) {
+      console.error("Ошибка: объект player не был инициализирован.");
+      return;
+    }
+
+    let currentPlayerId = player.getUniqueID();
+    let currentPlayerData = playerData[currentPlayerId];
+
+    if (!currentPlayerData || score > currentPlayerData.bestScore) {
+      newData = {
+        username: player.getName() || 'Гость',
+        bestScore: score,
+        otherData: player.getData(),
+      };
+
+      playerData[currentPlayerId] = newData;
+
+      player
+        .setData(newData, true)
+        .then(() => {
+          console.log("Лучший счет успешно обновлён на сервере:", score);
+          checkAchievement(newData); // Проверяем достижения после обновления счёта
+        })
+        .catch((error) => {
+          console.error("Ошибка при сохранении лучшего счета:", error);
+        });
+    } else {
+      console.warn("Новый счет не лучше текущего лучшего счета.");
+      checkAchievement(currentPlayerData);
+    }
   }
-}
 
-function storageCallback() {
-  createTable();
-}
+  function storage(loadcallback) {
+    if (!ysdk) {
+      console.error("Ошибка: объект ysdk не был инициализирован.");
+      return;
+    }
 
-storage(storageCallback);
+    if (platform == platforms.yandex) {
+      console.log("storage");
+      ysdk
+        .getPlayer()
+        .then((player) => {
+          player
+            .getData()
+            .then((data) => {
+              console.log("data load");
+              console.log(data);
+              console.log(player.getName());
+              storage.get = function (key) {
+                return data[key];
+              };
+              storage.set = function (key, value) {
+                data[key] = value;
+              };
+              storage.push = function () {
+                player.setData(data).then(() => {
+                  console.log("yandexsdk cloud push seccuss");
+                  console.log(data);
+                });
+              };
 
-initGame();
+              storage.type = 1;
 
-function createTable() {
-  let tableBody = document.querySelector(".tournamentTable tbody");
-  tableBody.innerHTML = "";
+              storage.getraw = function () {
+                return data;
+              };
 
-  Object.keys(playerData).forEach((playerId, index) => {
-    let playerInfo = playerData[playerId];
-    let row = document.createElement("tr");
+              loadcallback();
+              console.log("привязка хранилища к облаку yandexsdk");
+            })
+            .catch((err) => {
+              lssave();
+            });
+        })
+        .catch((err) => {
+          lssave();
+        });
+    } else {
+      lssave();
+    }
 
-    // Место
-    let placeCell = document.createElement("td");
-    placeCell.textContent = index + 1;
-    row.appendChild(placeCell);
+    function lssave() {
+      console.log("привязка хранилища к localStorage");
+      storage.get = function (key) {
+        return localStorage[key];
+      };
+      storage.set = function (key, value) {
+        localStorage[key] = value;
+      };
+      storage.push = function () {};
+      storage.getraw = function () {
+        return localStorage;
+      };
+      storage.type = 0;
+      loadcallback();
+    }
+  }
 
-    // Логин игрока (Yandex ID)
-    let loginCell = document.createElement("td");
-    // loginCell.textContent = playerId;
-    loginCell.textContent = player.getName()
-    row.appendChild(loginCell);
+  function storageCallback() {
+    createTable();
+  }
 
-    // Лучший счет
-    let bestScoreCell = document.createElement("td");
-    bestScoreCell.textContent = playerInfo.bestScore || 0;
-    row.appendChild(bestScoreCell);
+  storage(storageCallback);
 
-    // Добавляем строку в таблицу
-    tableBody.appendChild(row);
-  });
-}
+  initGame();
+
+  function createTable() {
+    let tableBody = document.querySelector(".tournamentTable tbody");
+    tableBody.innerHTML = "";
+
+    Object.keys(playerData).forEach((playerId, index) => {
+      let playerInfo = playerData[playerId];
+      let row = document.createElement("tr");
+
+      // Место
+      let placeCell = document.createElement("td");
+      placeCell.textContent = index + 1;
+      row.appendChild(placeCell);
+
+      // Логин игрока (Yandex ID)
+      let loginCell = document.createElement("td");
+      // loginCell.textContent = playerId;
+      loginCell.textContent = playerInfo.username;
+      row.appendChild(loginCell);
+
+      // Лучший счет
+      let bestScoreCell = document.createElement("td");
+      // bestScoreCell.textContent = playerInfo.bestScore || 0;
+      bestScoreCell.textContent = newData.bestScore || 0;
+      row.appendChild(bestScoreCell);
+
+      // Добавляем строку в таблицу
+      tableBody.appendChild(row);
+    });
+  }
 
 
-  let achivmentsModal = document.querySelector('.achievements')
-let achivmentsCloseButton = document.querySelector('.achievements__close-button')
-  let achivmentsButton = document.querySelector('.achievments-button')
-  let newGameButton = document.querySelector(".new_game-button");
-  let newGameButtonWin = document.querySelector(".win__game-Button");
+  const recordsButton = document.querySelector(".records");
+  const recordsModal = document.querySelector(".recordsModal");
+  const achievementsButton = document.querySelector(".achievments-button");
+  const achievementsModal = document.querySelector(".achievementsModal");
+  const popupCloseButtons = document.querySelectorAll(".popup__close-button");
+  const newGameButton = document.querySelector(".new_game-button");
+  const newGameButtonWin = document.querySelector(".win__game-Button");
   let gridContainer = document.querySelector(".grid__container");
   let scoreText = document.querySelector(".score__text");
-  let gameContainerWin = document.querySelector(".game__container-win");
-  let closeButton = document.querySelector(".close");
-  let menu = document.querySelector(".menu");
-  let menuButton = document.querySelector(".menu-button");
-  let fieldButton4x4 = document.querySelector(".field4x4");
-  let fieldButton5x5 = document.querySelector(".field5x5");
-  let fieldButton6x6 = document.querySelector(".field6x6");
-  let fieldButton8x8 = document.querySelector(".field8x8");
+  const gameContainerWin = document.querySelector(".game__container-win");
+  const closeButton = document.querySelector(".close");
+  const menu = document.querySelector(".menu");
+  const menuButton = document.querySelector(".menu-button");
+  const fieldButton4x4 = document.querySelector(".field4x4");
+  const fieldButton5x5 = document.querySelector(".field5x5");
+  const fieldButton6x6 = document.querySelector(".field6x6");
+  const fieldButton8x8 = document.querySelector(".field8x8");
+  const returnButton = document.querySelector(".return_button");
   // let bgMusic = new Audio();
   // bgMusic.src = "/sounds/bacroundMusic.mp3";
   // bgMusic.volume = 0.3;
@@ -241,9 +310,11 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
     y: null,
   };
 
-  
+  const achievementOne = document.querySelector(".achievement_one");
+  const achievementTwo = document.querySelector(".achievement_two");
+  const achievementThree = document.querySelector(".achievement_three");
+  const achievementFour = document.querySelector(".achievement_four");
 
-  let returnButton = document.querySelector(".return_button");
   let moveHistory = [];
   let cells = [];
   // bgMusic.play()
@@ -278,6 +349,7 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
       }
     }
   }
+
 
   function createGrid() {
     for (let i = 0; i < gridSize * gridSize; i++) {
@@ -555,7 +627,7 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
     menu.classList.add("visibility-hidden");
   }
 
-  function openedMenu(params) {
+  function openedMenu() {
     menu.classList.remove("visibility-hidden");
   }
 
@@ -636,20 +708,47 @@ let achivmentsCloseButton = document.querySelector('.achievements__close-button'
   fieldButton4x4.addEventListener("click", function () {
     resizeGrid(4);
     closedMenu();
-
-    
   });
 
-  recordsButton.addEventListener('click', function () {
-    recordsModal.classList.add("show-standings");
-    document.body.classList.add("standings-open");
-    storage(storageCallback);
-  })
+  function openPopup(popup) {
+    popup.classList.add("popup_opened");
+    document.addEventListener("click", closePopupOnBackgroundClick);
+    document.addEventListener("keydown", closePopupOnEscape);
+  }
 
-  standingsCloseButton.addEventListener("click", function () {
-    recordsModal.classList.remove("show-standings");
-    document.body.classList.remove("standings-open");
+  function closePopup(popup) {
+    popup.classList.remove("popup_opened");
+    document.removeEventListener("click", closePopupOnBackgroundClick);
+    document.removeEventListener("keydown", closePopupOnEscape);
+  }
+
+  function closePopupOnEscape(event) {
+    if (event.key === "Escape") {
+      const popup = document.querySelector(".popup_opened");
+      closePopup(popup);
+    }
+  }
+
+  function closePopupOnBackgroundClick(event) {
+    if (event.target.classList.contains("popup_opened")) {
+      closePopup(event.target);
+    }
+  }
+
+  recordsButton.addEventListener("click", function () {
+    openPopup(recordsModal);
+    storage(storageCallback);
+  });
+
+  achievementsButton.addEventListener("click", function () {
+    openPopup(achievementsModal);
+    checkAchievement();
+  });
+
+  popupCloseButtons.forEach((button) => {
+    button.addEventListener("click", function (event) {
+      const popup = event.target.closest(".popup");
+      closePopup(popup);
+    });
   });
 });
-
-

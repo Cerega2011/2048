@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
       rel="stylesheet"
     />
-    <script src="https://yandex.ru/games/sdk/v2"></script> 
+    <script src="https://yandex.ru/games/sdk/v2"></script>
   </head>
 
   <body>
@@ -21,59 +21,52 @@
           <p class="score__text">Очки:0</p>
         </div>
         <button class="menu-button"></button>
-        <button class="new_game-button button">Новая игра</button>
+        <button class="new_game-button button">Новая игра!</button>
         <button class="return_button button"></button>
       </div>
 
-      <div class="standings recordsModal">
-        <div class="standings-content">
-          <span class="standings__close-button">&times;</span>
+      <div class="popup recordsModal">
+        <div class="popup-content">
+          <button class="popup__close-button">&times;</button>
           <h2>Турнирная таблица</h2>
           <table class="tournamentTable">
-            <!-- Таблица будет заполняться через JavaScript -->
             <thead>
               <tr>
                 <th>Место</th>
                 <th>Никнейм</th>
-                <th>Очки</th>
-                <th>Игры</th>
                 <th>Победы</th>
-                
+                <th>Очки</th>
               </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
 
-
-      <div class="achievements">
-        <div class="achievements-content">
-          <span class="achievements__close-button">&times;</span>
+      <div class="popup achievementsModal">
+        <div class="popup-content">
+          <button class="popup__close-button">&times;</button>
           <h2>Достижения</h2>
           <div class="achievementsTable">
             <ul class="achievements__list">
-              <li class="achievements__item achievements_done">
-                <img src="/images/gold.png" alt="" class="achievements__img">
-                <p class="achievements__text">Вы сыграли 10 игр</p>
+              <li class="achievements__item achievement_one">
+                <img src="images/gold.png" alt="" class="achievements__img" />
+                <p class="achievements__text">Набрать 100 очков</p>
               </li>
-              <li class="achievements__item">
-                <img src="/images/gold.png" alt="" class="achievements__img">
-                <p class="achievements__text">Вы сыграли 50 игр</p>
+              <li class="achievements__item achievement_two">
+                <img src="images/gold.png" alt="" class="achievements__img" />
+                <p class="achievements__text">Набрать 500 очков</p>
               </li>
-              <li class="achievements__item">
-                <img src="/images/gold.png" alt="" class="achievements__img">
-                <p class="achievements__text">Выиграть 10 игр</p>
+              <li class="achievements__item achievement_three">
+                <img src="images/gold.png" alt="" class="achievements__img" />
+                <p class="achievements__text">Набрать 1000 очков</p>
               </li>
-              <li class="achievements__item">
-                <img src="/images/gold.png" alt="" class="achievements__img">
-                <p class="achievements__text">Набрать 100000 очков</p>
+              <li class="achievements__item achievement_four">
+                <img src="images/gold.png" alt="" class="achievements__img" />
+                <p class="achievements__text">Набрать 5000 очков</p>
               </li>
             </ul>
           </div>
-            <!-- Таблица будет заполняться через JavaScript -->
-           
         </div>
       </div>
 
@@ -101,6 +94,13 @@
           <button class="button close"></button>
           <button class="button achievments-button"></button>
         </div>
+      </div>
+    </div>
+
+    <div class="notification">
+      <div class="notification__wrapper">
+        <img src="images/gold.png" alt="" class="notification__img" />
+        <p class="notification__text">Открыто новое достижение</p>
       </div>
     </div>
     <script src="script.js"></script>
