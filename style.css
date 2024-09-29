@@ -22,6 +22,10 @@ body {
   height: 100vh !important;
   background-color: #faf8ef;
   position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 @media (max-width: 1024px) {
@@ -84,7 +88,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: #cdc1b4; */
   background-color: #5e687f;
   color: #776e65;
   border-radius: 0.5rem;
@@ -97,49 +100,40 @@ body {
 }
 
 .grid-cell-4 {
-  /* background-color: #ede0c8; */
   background-color: #9c8cbd;
   color: #f9f6f2;
 }
 
 .grid-cell-8 {
-  /* background-color: #f2b179; */
   background-color: #77abda;
   color: #f9f6f2;
 }
 
 .grid-cell-16 {
-  /* background-color: #f59563; */
   color: #f9f6f2;
   background-color: #2185c1;
 }
 
 .grid-cell-32 {
-  /* background-color: #f67c5f; */
   background-color: #80cdef;
   color: #f9f6f2;
 }
 
 .grid-cell-64 {
-  /* background-color: #f65e3b; */
   background-color: #38b8e7;
 }
 
 .grid-cell-128 {
-  /* background-color: #edcf72; */
   background-color: #715c9f;
   color: #f9f6f2;
 }
 
 .grid-cell-256 {
-  /* background-color: #edcc61; */
   background-color: #9567a0;
-
   color: #f9f6f2;
 }
 
 .grid-cell-512 {
-  /* background-color: #edc850; */
   background-color: #4a318c;
   color: #f9f6f2;
 }
@@ -276,7 +270,7 @@ button {
 
 .menu {
   display: flex;
-  background-color: rgb(88, 11, 55);
+  background-color: #faf8ef;
   height: 100%;
   position: fixed;
   left: 0;
@@ -389,7 +383,6 @@ button {
   background-color: #f2f2f2;
 }
 
-
 .notification {
   position: absolute;
   top: 10rem;
@@ -403,15 +396,13 @@ button {
 .notification__wrapper {
   display: flex;
   align-items: center;
-  
 }
 
-.notification__img{
+.notification__img {
   width: 6rem;
-  
 }
 
-.notification__text{
+.notification__text {
   font-size: 2rem;
   padding: 1rem 2rem;
   color: #f2f2f2;
