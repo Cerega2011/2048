@@ -18,91 +18,29 @@
     <div class="game__container">
       <div class="all__elements__container">
         <div class="score__container">
-          <p class="score__text">Очки:0</p>
-          <p class="bestScoreText">рекорд:1254</p>
+          <div class="score-wrapper">
+            <p class="score__text">Очки:</p>
+            <p class="current-score"></p>
+          </div>
+          <div class="score-wrapper">
+            <p class="bestScoreText">Рекорд:</p>
+            <p class="best-score"></p>
+          </div>
         </div>
-        <!-- <button class="menu-button"></button> -->
         <button class="new_game-button button">Новая игра</button>
         <button class="return_button button"></button>
       </div>
 
-      <!-- <div class="popup recordsModal">
-        <div class="popup-content">
-          <button class="popup__close-button">&times;</button>
-          <h2>Турнирная таблица</h2>
-          <table class="tournamentTable">
-            <thead>
-              <tr>
-                <th>Место</th>
-                <th>Никнейм</th>
-                <th>Очки</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div> -->
-
-      <!-- <div class="popup achievementsModal">
-        <div class="popup-content">
-          <button class="popup__close-button">&times;</button>
-          <h2>Достижения</h2>
-          <div class="achievementsTable">
-            <ul class="achievements__list">
-              <li class="achievements__item achievement_one achievements_done">
-                <img src="images/gold.png" alt="" class="achievements__img" />
-                <p class="achievements__text">Набрать 100 очков</p>
-              </li>
-              <li class="achievements__item achievement_two">
-                <img src="images/gold.png" alt="" class="achievements__img" />
-                <p class="achievements__text">Набрать 500 очков</p>
-              </li>
-              <li class="achievements__item achievement_three">
-                <img src="images/gold.png" alt="" class="achievements__img" />
-                <p class="achievements__text">Набрать 1000 очков</p>
-              </li>
-              <li class="achievements__item achievement_four">
-                <img src="images/gold.png" alt="" class="achievements__img" />
-                <p class="achievements__text">Набрать 5000 очков</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div> -->
-
       <div class="game__container-win">
         <div class="game__container-grey">
-          <h1>Вы достигли 2048</h1>
-          <p>Вы молодец</p>
+          <h1 class="win__text">Вы достигли 2048</h1>
+          <p class="win-subtitle">Вы молодец</p>
         </div>
         <button class="win__game-Button button">Начать заново</button>
       </div>
       <div class="grid__container"></div>
     </div>
 
-    <!-- <div class="menu">
-      <div class="menu-wrapper">
-        <div class="buttons__wrapper">
-          <button class="menu__button-field field4x4">4x4</button>
-          <button class="menu__button-field field5x5">5x5</button>
-          <button class="menu__button-field field6x6">6x6</button>
-          <button class="menu__button-field field8x8">8x8</button>
-        </div>
-
-        <div class="menu__button-wrapper">
-          <button class="button records"></button>
-          <button class="button close"></button>
-          <button class="button achievments-button"></button>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <div class="notification">
-      <div class="notification__wrapper">
-        <img class="notification__img" src="images/gold.png" alt="logo" />
-        <p class="notification__text">Открыто новое достижение</p>
-      </div>
-    </div> -->
     <script src="script.js"></script>
   </body>
 </html>
